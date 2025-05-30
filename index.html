@@ -604,11 +604,11 @@
         function removeDuplicates(data) {
             const seen = new Set();
             return data.filter(item => {
-                const key = `${item.email}-${item.createdAt}`;
-                if (seen.has(key)) {
+                // Only check email for duplicates, keep the first occurrence (most recent due to sorting)
+                if (seen.has(item.email)) {
                     return false;
                 }
-                seen.add(key);
+                seen.add(item.email);
                 return true;
             });
         }
@@ -705,6 +705,11 @@
         }
         
         function downloadCSV() {
+            if (!isAuthenticated) {
+                showAuthModal();
+                return;
+            }
+            
             if (filteredData.length === 0) {
                 alert('No data to download');
                 return;
